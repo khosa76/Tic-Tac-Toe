@@ -1,83 +1,156 @@
-* {
-  margin: 0;
-  padding: 0;
+td {
+  border: 0.35rem solid #ffffff;
+  height: 22vmin;
+  width: 22vmin;
+  text-align: center;
+  vertical-align: middle;
+  font-family: Finger Paint, Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 8rem;
+  cursor: pointer;
+  background-color: rgb(0, 0, 0);
 }
+
+* {
+  margin: 0px;
+  padding: 0px;
+  font-family: "Finger Paint";
+  justify-content: center;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+
+/* Below code can change the color of X and O */
+
+.red {
+    color: #808080;
+}
+.green {
+    color: rgb(255, 255, 255);
+}
+
+
 
 body {
-  background-color: aquamarine;
+  background-color: rgb(0, 0, 0);
   text-align: center;
+  color: #ffffff;
+  /* font-size: 100px; */
 }
 
-.container {
-  height: 70vh;
+table {
   display: flex;
-  /* flex-wrap: wrap; */
+  justify-content: center;
+  border-collapse: collapse;
+  position: relative;
+  align-items: center;
+  text-align: center;
+  /* border-style: solid; */
+  border-color: #333;
+  /* box-shadow: 4px 4px; */
+  font-family: "Finger Paint";
+  /* margin-bottom: 5vmin; */
+}
+
+table tr:first-child td {
+  border-top: 0;
+}
+
+table tr:last-child td {
+  border-bottom: 0;
+}
+
+table tr td:first-child {
+  border-left: 0;
+}
+
+table tr td:last-child {
+  border-right: 0;
+}
+
+.endgame {
+  display: flex;
   justify-content: center;
   align-items: center;
+  /* background-color: rgb(127,75,138); */
+  background-color: rgb(0, 0, 0);
+  margin-bottom: 3vmin;
+  margin-top: 3vmin;
+
+
+  /* margin-left: 40vmin; */
+  /* margin-right: 40vmin; */
+  height: auto;
+  /* width: 25vmin; */
+  /* padding-top: 5vmin; */
+  padding-bottom: 5vmin;
+
+  color: white;
+  font-size: 2em;
+  /* border: solid;  */
 }
 
-.game {
-  height: 60vmin;
-  width: 60vmin;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5vmin;
-}
-
-.box {
-  height: 18vmin;
-  width: 18vmin;
-  border-radius: 1rem;
+.endgame button {
+  font-size: 3vmin;
+  margin-top: 3vmin;
+  /* font-style: italic; */
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  padding: 1vmin;
+  /* border-radius: 15px; */
   border: none;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
-  font-size: 8vmin;
-  color: #20db5e;
-  background-color: antiquewhite;
+  
 }
 
-#rstBtn {
-  padding: 1rem;
-  font-size: 1.25rem;
-  background-color: #191913;
-  color: #fff;
-  border-radius: 1rem;
-  border: none;
-  /* position: absolute; */
-}
-
-h1 {
-  color: black;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-#new-btn {
-  padding: 1rem;
-  font-size: 1.25rem;
-  background-color: #191913;
-  color: #fff;
-  border-radius: 1rem;
-  border: none;
-}
-
-#msg {
-  color: #e81010;
-  font-size: 5vmin;
-}
-
-.msg-container {
-  height: 100vmin;
+#khosa1 {
   display: flex;
   justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 4rem;
+  font-size: 50px;
+  font-style: italic;
+  /* color: rgb(127,75,138); */
+  font-family: "Finger Paint";
+  
+  margin-bottom: 10vmin;
 }
 
-.hide {
-  display: none;
+#khosa3 {
+  font-style: normal;
+  font-family: "Finger Paint";
 }
+
+#khosa {
+  align-items: center;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+    }
+
+    #khosa1 {
+    
+        margin-bottom: 10vmin;
+        margin-top: 500px;
+      }
+
+
+  }

@@ -1,33 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tic Tac Toe</title>
-    <link rel="stylesheet" href="gamestyle.css" />
+    <link href="gamestyle.css" rel="stylesheet" />
+
+    <title>Khsoa Tic Tac Toe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Finger+Paint&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div class="msg-container hide">
-      <p id="msg">Winner</p>
-      <button id="new-btn">New Game</button>
+    <div class="row" id="khosa1"><span id="khosa3"></span></div>
+
+    
+    <div id="khosa" class="khosa55">
+      <table>
+        <tr>
+          <td class="cell" id="0"></td>
+          <td class="cell" id="1"></td>
+          <td class="cell" id="2"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="3"></td>
+          <td class="cell" id="4"></td>
+          <td class="cell" id="5"></td>
+        </tr>
+        <tr>
+          <td class="cell" id="6"></td>
+          <td class="cell" id="7"></td>
+          <td class="cell" id="8"></td>
+        </tr>
+      </table>
     </div>
-    <main>
-      <h1>Tic tac Toe</h1>
-      <div class="container">
-        <div class="game">
-          <button class="box"></button>
-          <button class="box"></button>
-          <button class="box"></button>
-          <button class="box"></button>
-          <button class="box"></button>
-          <button class="box"></button>
-          <button class="box"></button>
-          <button class="box"></button>
-          <button class="box"></button>
-        </div>
-      </div>
-      <button id="rstBtn">Reset Game</button>
-    </main>
-    <script type="text/javascript" src="gamescript.js"></script>
+    <br />
+    <div class="endgame">
+      <div class="text"></div>
+      <button onclick="startGame()">Restart</button>
+    </div>
+    <br />
+    <script src="gamescript.js"></script>
   </body>
 </html>

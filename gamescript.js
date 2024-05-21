@@ -1,188 +1,194 @@
-// Game state
-let gameState = Array(9).fill('');
-let isPlayerTurn = true;
-let gameOver = false;
+var origBoard;
+const huPlayer = 'O';
+const aiPlayer = 'X';
+const wPlayer = 'W';  // to change the color of winning player 
 
-// DOM elements
-const boxes = document.querySelectorAll('.box');
-const rstBtn = document.querySelector('#rstBtn');
-const newGameBtn = document.querySelector('#new-btn');
-const msgContainer = document.querySelector('.msg-container');
-const msg = document.querySelector('#msg');
 
-// Win patterns
-const winPatterns = [
-  [0, 1, 2],
-  [0, 3, 6],
-  [0, 4, 8],
-  [1, 4, 7],
-  [2, 5, 8],
-  [2, 4, 6],
-  [3, 4, 5],
-  [6, 7, 8],
-];
+// Change the colors of X and O
+const xColor = 'white';
+const oColor = 'white';
+const wColor = '#808080'; // to change the color of winning player 
 
-// Event listeners
-boxes.forEach((box, index) => {
-  box.addEventListener('click', () => handleBoxClick(index));
-});
-newGameBtn.addEventListener('click', resetGame);
-rstBtn.addEventListener('click', resetGame);
 
-// Game logic
-function handleBoxClick(index) {
-    if (gameState[index] === '' && !gameOver && isPlayerTurn) {
-      gameState[index] = 'X';
-      boxes[index].textContent = 'X';
-      boxes[index].style.color = 'black';
-      boxes[index].disabled = true;
-      checkWinner(); // Check for winner after player's move
-      if (!gameOver) {
-        isPlayerTurn = false; // Update player's turn
-        makeComputerMove();
-      }
+
+
+
+
+
+const winCombos = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [6, 4, 2]
+]
+
+
+
+function changeColor(element, player) {
+    element.classList.add('fade-in'); // Add fade-in animation
+    if (player === huPlayer) {
+        element.style.color = oColor;
+    } else if (player === aiPlayer) {
+        element.style.color = xColor;
+    } else if (player === wPlayer) {
+        element.style.color = wColor;  // to change the color of winning player 
+
     }
-  }
-  
-  
-
-  function makeComputerMove() {
-    if (!gameOver && !isPlayerTurn) {
-      const bestMove = getBestMove(gameState);
-      gameState[bestMove] = 'O';
-      boxes[bestMove].textContent = 'O';
-      boxes[bestMove].style.color = 'red';
-      boxes[bestMove].disabled = true;
-      checkWinner(); // Check for winner after computer's move
-      isPlayerTurn = true; // Update player's turn
-    }
-  }
-  
-
-function checkWinner() {
-    const score = getScore(gameState);
-    // console.log('Score:', score); // Debug statement
-    if (score !== -1) {
-      if (score === 0) {
-        showWinner('Draw');
-      } else if (score === -1) {
-        showWinner('X');
-      } else {
-        showWinner('O');
-      }
-      gameOver = true;
-    }
-  }
-  
-  
-  
-
-function showWinner(winner) {
-    if (winner === 'Draw') {
-      msg.textContent = `It's a Draw!`;
-    } else {
-      msg.textContent = `Congratulations, Winner is ${winner}`;
-    }
-    msgContainer.classList.remove('hide');
-    disableBoxes();
-  }
-  
-
-function resetGame() {
-  gameState = Array(9).fill('');
-  isPlayerTurn = true;
-  gameOver = false;
-  enableBoxes();
-  msgContainer.classList.add('hide');
 }
 
-function enableBoxes() {
-  boxes.forEach((box) => {
-    box.disabled = false;
-    box.textContent = '';
-  });
+
+
+const cells = document.querySelectorAll('.cell');
+startGame();
+
+
+
+function startGame() {
+    document.querySelector(".endgame").style.display = "none";
+    origBoard = Array.from(Array(9).keys());
+    for (var i = 0; i < cells.length; i++) {
+        cells[i].innerText = '';
+        cells[i].classList.remove('red', 'green', 'fade-in'); // remove if crash
+        cells[i].style.removeProperty('background-color');
+        cells[i].addEventListener('click', turnClick, false);
+       
+    }
 }
 
-function disableBoxes() {
-  boxes.forEach((box) => {
-    box.disabled = true;
-  });
-}
-
-// Helper functions
-function isDraw() {
-  return gameState.every((cell) => cell !== '');
-}
-
-function getScore(state) {
-    for (let pattern of winPatterns) {
-      const [pos1, pos2, pos3] = pattern;
-       // console.log('Checking pattern:', pattern); // Debug statement
-      if (state[pos1] === state[pos2] && state[pos2] === state[pos3]) {
-        // console.log('Winner detected:', state[pos1]); // Debug statement
-        if (state[pos1] === 'X') {
-          return -1; // Player X wins
-        } else if (state[pos1] === 'O') {
-          return 1; // Player O wins
+function turnClick(square) {
+    if (typeof origBoard[square.target.id] == 'number') {
+        turn(square.target.id, huPlayer)
+      
+       
+        if (!checkWin(origBoard, huPlayer) && !checkTie()) {
+            setTimeout(() => turn(bestSpot(), aiPlayer), 500); // Add 1 second delay for AI turn
         }
-      }
     }
-  
-    if (isDraw()) {
-      // console.log('Game is a draw'); // Debug statement
-      return 0; // It's a draw
-    }
-  
-    return -1; // Game is not over yet
-  }
-  
-
-function getBestMove(state) {
-  let bestScore = -Infinity;
-  let bestMove = null;
-
-  for (let i = 0; i < state.length; i++) {
-    if (state[i] === '') {
-      state[i] = 'O';
-      const score = minimax(state, 'X', 0, false);
-      state[i] = '';
-      if (score > bestScore) {
-        bestScore = score;
-        bestMove = i;
-      }
-    }
-  }
-
-  return bestMove;
 }
 
-function minimax(state, player, depth, isMaximizingPlayer) {
-  const score = getScore(state);
-  if (score !== -1) {
-    return score;
-  }
+function turn(squareId, player) {
+    origBoard[squareId] = player;
+    const cell = document.getElementById(squareId);
+    cell.innerText = player;
+    cell.classList.remove('fade-in'); // Reset animation class
+    void cell.offsetWidth; // Trigger reflow
+    changeColor(cell, player); // Change color based on the player
 
-  if (isMaximizingPlayer) {
-    let bestScore = -Infinity;
-    for (let i = 0; i < state.length; i++) {
-      if (state[i] === '') {
-        state[i] = 'O';
-        const currentScore = minimax(state, 'X', depth + 1, false);
-        state[i] = '';
-        bestScore = Math.max(bestScore, currentScore);
-      }
+    let gameWon = checkWin(origBoard, player);
+    if (gameWon) gameOver(gameWon);
+}
+
+
+
+
+function checkWin(board, player) {
+    let plays = board.reduce((a, e, i) =>
+        (e === player) ? a.concat(i) : a, []);
+    let gameWon = null;
+    for (let [index, win] of winCombos.entries()) {
+        if (win.every(elem => plays.indexOf(elem) > -1)) {
+            gameWon = { index: index, player: player };
+            break;
+        }
     }
-    return bestScore;
-  } else {
-    let bestScore = Infinity;
-    for (let i = 0; i < state.length; i++) {
-      if (state[i] === '') {
-        state[i] = 'X';
-        const currentScore = minimax(state, 'O', depth + 1, true);
-        state[i] = '';
-        bestScore = Math.min(bestScore, currentScore);
-      }
+    return gameWon;
+}
+
+
+
+function gameOver(gameWon) {
+    for (let index of winCombos[gameWon.index]) {
+        const cell = document.getElementById(index);
+        // cell.style.backgroundColor = "#333"; 
+        changeColor(cell, wPlayer); // Change color based on the player
     }
-    return bestScore;
-  }
+    for (var i = 0; i < cells.length; i++) {
+        cells[i].removeEventListener('click', turnClick, false);
+    }
+    declareWinner(gameWon.player == huPlayer ? "You win!" : "You lose.");
+}
+
+
+
+function declareWinner(who) {
+    document.querySelector(".endgame").style.display = "block";
+    document.querySelector(".endgame .text").innerText = who;
+}
+
+function emptySquares() {
+    return origBoard.filter(s => typeof s == 'number');
+}
+
+function bestSpot() {
+    return minimax(origBoard, aiPlayer).index;
+}
+
+function checkTie() {
+    if (emptySquares().length == 0) {
+        for (var i = 0; i < cells.length; i++) {
+            // cells[i].style.backgroundColor = "rgb(174,156,168)";
+            // cells[i].classList.add('red'); // Add tie color class
+            cells[i].style.color = "#808080"; // color of tie game
+          console.log(cells[i]);
+            cells[i].removeEventListener('click', turnClick, false);
+        }
+        declareWinner("Tie Game!")
+        return true;
+    }
+    return false;
+}
+
+function minimax(newBoard, player) {
+    var availSpots = emptySquares();
+
+    if (checkWin(newBoard, huPlayer)) {
+        return { score: -10 };
+    } else if (checkWin(newBoard, aiPlayer)) {
+        return { score: 10 };
+    } else if (availSpots.length === 0) {
+        return { score: 0 };
+    }
+    var moves = [];
+    for (var i = 0; i < availSpots.length; i++) {
+        var move = {};
+        move.index = newBoard[availSpots[i]];
+        newBoard[availSpots[i]] = player;
+
+        if (player == aiPlayer) {
+            var result = minimax(newBoard, huPlayer);
+            move.score = result.score;
+        } else {
+            var result = minimax(newBoard, aiPlayer);
+            move.score = result.score;
+        }
+
+        newBoard[availSpots[i]] = move.index;
+
+        moves.push(move);
+    }
+
+    var bestMove;
+    if (player === aiPlayer) {
+        var bestScore = -10000;
+        for (var i = 0; i < moves.length; i++) {
+            if (moves[i].score > bestScore) {
+                bestScore = moves[i].score;
+                bestMove = i;
+            }
+        }
+    } else {
+        var bestScore = 10000;
+        for (var i = 0; i < moves.length; i++) {
+            if (moves[i].score < bestScore) {
+                bestScore = moves[i].score;
+                bestMove = i;
+            }
+        }
+    }
+
+    return moves[bestMove];
 }
